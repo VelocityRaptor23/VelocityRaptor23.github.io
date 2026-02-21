@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VelocityRaptor23</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #04040f;
+      --surface: #0a0a1a;
+      --border: #151530;
+      --accent: #c084fc;
+      --accent2: #38bdf8;
+      --accent3: #f472b6;
+      --text: #cbd5e1;
+      --muted: #475569;
+      --white: #f1f5f9;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Crimson Pro', serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Nebula background */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 20% 30%, rgba(192,132,252,0.06) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 70%, rgba(56,189,248,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse 40% 40% at 50% 10%, rgba(244,114,182,0.04) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.4;
+    }
+
+    /* Nav */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 1.2rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      background: rgba(4,4,15,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 100;
+    }
+
+    .logo {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-decoration: none;
+    }
+
+    .logo span { color: var(--muted); }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+
+    nav ul a {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--muted);
+      text-decoration: none;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav ul a:hover { color: var(--white); }
+
+    /* Hero */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 5rem;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .hero-left {
+      padding: 6rem 3rem 4rem 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tag {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .tag::before {
+      content: '';
+      display: block;
+      width: 2rem;
+      height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(3rem, 6vw, 5.5rem);
+      font-weight: 300;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--accent2);
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+      line-height: 1.8;
+    }
+
+    .hero-desc strong {
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.8rem 1.6rem;
+      border: 1px solid;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+    }
+
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--muted);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--muted);
+      color: var(--white);
+    }
+
+    /* Hero right — technical diagram */
+    .hero-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4rem 2rem;
+      position: relative;
+    }
+
+    .diagram {
+      width: 320px;
+      height: 320px;
+      position: relative;
+      animation: slowspin 40s linear infinite;
+    }
+
+    @keyframes slowspin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.15;
+    }
+
+    .equation-card {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      animation: none;
+    }
+
+    .eq {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.1rem;
+      color: var(--accent2);
+      display: block;
+      margin-bottom: 0.3rem;
+      opacity: 0;
+      animation: fadein 0.6s forwards;
+    }
+
+    .eq:nth-child(1) { animation-delay: 0.5s; }
+    .eq:nth-child(2) { animation-delay: 1s; }
+    .eq:nth-child(3) { animation-delay: 1.5s; }
+
+    @keyframes fadein {
+      to { opacity: 1; }
+    }
+
+    /* Divider */
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    .section { padding: 5rem 4rem; max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .log-section { padding: 5rem 4rem; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    .about-section { padding: 5rem 4rem; border-top: 1px solid var(--border); position: relative; z-index: 1; }
+    footer { border-top: 1px solid var(--border); padding: 2rem 4rem; display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+
+    .section-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 3rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2.5rem;
+      position: relative;
+      transition: border-color 0.2s;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .project-card:hover { border-color: var(--accent); }
+
+    .project-card.featured::before {
+      content: 'ACTIVE RESEARCH';
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 1.2rem;
+    }
+
+    .project-card h3 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.8rem;
+      line-height: 1.2;
+    }
+
+    .project-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    .project-status {
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent2);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+
+    .sidebar-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .mini-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 1.8rem;
+      transition: border-color 0.2s;
+    }
+
+    .mini-card:hover { border-color: var(--muted); }
+
+    .mini-card .label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .mini-card h4 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1.3;
+    }
+
+    /* Log section */
+    .log-section .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .log-entry {
+      display: grid;
+      grid-template-columns: 140px 1fr;
+      gap: 2rem;
+      padding: 2rem 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .log-date {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+      padding-top: 0.3rem;
+    }
+
+    .log-content h4 {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+
+    .log-content p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 300;
+    }
+
+    .log-tag {
+      display: inline-block;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      letter-spacing: 0.15em;
+      padding: 0.2rem 0.6rem;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      margin-top: 0.8rem;
+      text-transform: uppercase;
+    }
+
+    /* About inner */
+    .about-section .inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: start;
+    }
+
+    .about-section h2 {
+      font-family: 'Crimson Pro', serif;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 300;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 1.5rem;
+    }
+
+    .about-section h2 em {
+      font-style: italic;
+      color: var(--accent2);
+    }
+
+    .about-section p {
+      color: var(--muted);
+      font-weight: 300;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .stat {
+      border-left: 2px solid var(--accent);
+      padding-left: 1.2rem;
+    }
+
+    .stat-num {
+      font-family: 'Space Mono', monospace;
+      font-size: 1.8rem;
+      color: var(--white);
+      display: block;
+      line-height: 1;
+      margin-bottom: 0.3rem;
+    }
+
+    .stat-label {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    footer p {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+
+    /* Page load animation */
+    .hero-left > * {
+      opacity: 0;
+      transform: translateY(20px);
+      animation: slideup 0.6s forwards;
+    }
+
+    .tag { animation-delay: 0.1s; }
+    h1 { animation-delay: 0.25s; }
+    .hero-desc { animation-delay: 0.4s; }
+    .cta-row { animation-delay: 0.55s; }
+
+    @keyframes slideup {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 768px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .hero-left { padding: 5rem 1.5rem 3rem; }
+      .section, .log-section, .about-section { padding: 3rem 1.5rem; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .about-section .inner { grid-template-columns: 1fr; gap: 3rem; }
+      nav { padding: 1rem 1.5rem; }
+      nav ul { gap: 1rem; }
+      footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="stars" style="position:fixed;inset:0;z-index:0;pointer-events:none;"></canvas>
+
+  <nav>
+    <a href="#" class="logo">Velocity<span>Raptor</span>23</a>
+    <ul>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#log">Log</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="https://github.com/VelocityRaptor23" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-left">
+      <div class="tag">Independent Researcher · India 🚀</div>
+      <h1>Finding the <em>flaw</em> in every system.</h1>
+      <p class="hero-desc">
+        I research <strong>rocket stability physics</strong> and write screenplays.
+        Both start the same way — find where things break down, then understand why.
+      </p>
+      <div class="cta-row">
+        <a href="#projects" class="btn btn-primary">View Research</a>
+        <a href="#log" class="btn btn-ghost">Read Logbook</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="diagram">
+        <svg viewBox="0 0 300 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="150" cy="150" r="120" stroke="#c084fc" stroke-width="0.5" stroke-dasharray="4 8"/>
+          <circle cx="150" cy="150" r="80" stroke="#38bdf8" stroke-width="0.5" stroke-dasharray="2 6"/>
+          <circle cx="150" cy="150" r="40" stroke="#f472b6" stroke-width="0.5"/>
+          <line x1="150" y1="30" x2="150" y2="270" stroke="#475569" stroke-width="0.5"/>
+          <line x1="30" y1="150" x2="270" y2="150" stroke="#475569" stroke-width="0.5"/>
+          <line x1="65" y1="65" x2="235" y2="235" stroke="#475569" stroke-width="0.3" stroke-dasharray="2 4"/>
+          <line x1="235" y1="65" x2="65" y2="235" stroke="#475569" stroke-width="0.3" stroke-dasharray="2 4"/>
+          <ellipse cx="150" cy="150" rx="120" ry="40" stroke="#38bdf8" stroke-width="0.4" stroke-dasharray="3 5"/>
+        </svg>
+      </div>
+      <div class="equation-card">
+        <span class="eq">L = Iω</span>
+        <span class="eq">τ = dL/dt</span>
+        <span class="eq">Ω = τ/L</span>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider"/>
+
+  <section class="section" id="projects">
+    <div class="section-label">Research Projects</div>
+    <div class="projects-grid">
+      <a href="#log" class="project-card featured">
+        <h3>Spin Stabilisation of Unguided Rockets</h3>
+        <p>Investigating the gyroscopic conditions under which spin minimises trajectory deviation caused by small asymmetric torques — and mapping the fundamental limitations of this stabilisation method. Beginning with rigid body mechanics, proceeding to OpenRocket simulation and Python modelling.</p>
+        <div class="project-status">
+          <span class="status-dot"></span>
+          Stage 1 — Mechanics Foundation
+        </div>
+      </a>
+      <div class="sidebar-cards">
+        <div class="mini-card">
+          <div class="label">Coming Soon</div>
+          <h4>Python Simulation of Precession Dynamics</h4>
+        </div>
+        <div class="mini-card">
+          <div class="label">In Development</div>
+          <h4>Jallianwala Bagh — Original Screenplay</h4>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="log-section" id="log">
+    <div class="inner">
+      <div class="section-label">Research Logbook</div>
+
+      <div class="log-entry">
+        <div class="log-date">FEB 2026<br/>Entry 001</div>
+        <div class="log-content">
+          <h4>The Question That Started It</h4>
+          <p>Reading SK Das — encountered a small section on William Hale's spinning rocket. The question formed: under what conditions does spin actually minimise trajectory deviation, and where does this method break down? Decided this would be the research focus. Assumption: model rocket as uniform solid cylinder for initial calculations.</p>
+          <span class="log-tag">Foundations</span>
+        </div>
+      </div>
+
+      <div class="log-entry">
+        <div class="log-date">FEB 2026<br/>Entry 002</div>
+        <div class="log-content">
+          <h4>L = Iω and τ = dL/dt</h4>
+          <p>These two equations are the entire foundation. When torque is perpendicular to angular momentum, the magnitude of L doesn't change — only its direction does. This means a spinning rocket doesn't deflect, it precesses. The spin converts a destabilising kick into a circular wobble around the flight path. Still working to fully internalise the mathematics. Kleppner & Kolenkow Ch. 7–8 next.</p>
+          <span class="log-tag">Gyroscopic Mechanics</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="about-section" id="about">
+    <div class="inner">
+      <div>
+        <h2>I start with the <em>villain.</em></h2>
+        <p>US citizen. Raised entirely in India. Preparing for JEE Advanced 2027 while independently researching rocket physics.</p>
+        <p>In screenwriting, I've always built from the antagonist — the one who understands why the plan fails. I've realised this is the same instinct that drives my research: find the limitation first, then understand the system.</p>
+        <p>This site documents that process honestly — including the confusions, the dead ends, and the slow moments of understanding.</p>
+      </div>
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-num">11th</span>
+          <span class="stat-label">Grade · PCM 97%</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">Top 10</span>
+          <span class="stat-label">JEE Adv · Campus</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">2027</span>
+          <span class="stat-label">JEE Advanced Target</span>
+        </div>
+        <div class="stat">
+          <span class="stat-num">01</span>
+          <span class="stat-label">Active Research Project</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2026 VelocityRaptor23</p>
+    <p>velocityraptor23.github.io</p>
+  </footer>
+
+  <script>
+    // Starfield
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function initStars() {
+      stars = [];
+      for (let i = 0; i < 200; i++) {
+        stars.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          r: Math.random() * 1.2,
+          alpha: Math.random() * 0.7 + 0.1,
+          speed: Math.random() * 0.015 + 0.005,
+          phase: Math.random() * Math.PI * 2
+        });
+      }
+    }
+
+    function drawStars(t) {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      stars.forEach(s => {
+        const a = s.alpha * (0.6 + 0.4 * Math.sin(t * s.speed + s.phase));
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,255,255,${a})`;
+        ctx.fill();
+      });
+      requestAnimationFrame(drawStars);
+    }
+
+    resize();
+    initStars();
+    requestAnimationFrame(drawStars);
+    window.addEventListener('resize', () => { resize(); initStars(); });
+  </script>
+
+</body>
+</html>
