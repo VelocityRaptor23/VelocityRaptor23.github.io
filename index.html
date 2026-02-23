@@ -400,45 +400,48 @@
     }
 
     .log-entry {
-      display: grid;
-      grid-template-columns: 140px 1fr;
-      gap: 2rem;
-      padding: 2rem 0;
+      padding: 2.5rem 0;
       border-bottom: 1px solid var(--border);
+      max-width: 720px;
     }
 
-    .log-date {
+    .log-entry-date {
       font-family: 'Space Mono', monospace;
       font-size: 0.65rem;
       color: var(--muted);
       letter-spacing: 0.1em;
-      padding-top: 0.3rem;
+      margin-bottom: 0.8rem;
     }
 
-    .log-content h4 {
+    .log-entry-body h3 {
       font-family: 'Crimson Pro', serif;
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       font-weight: 400;
       color: var(--white);
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.8rem;
     }
 
-    .log-content p {
-      color: var(--muted);
-      font-size: 0.95rem;
+    .log-entry-body p {
+      color: var(--text);
+      font-size: 1rem;
       font-weight: 300;
+      line-height: 1.8;
+      margin-bottom: 1rem;
     }
 
-    .log-tag {
-      display: inline-block;
+    .log-doc {
       font-family: 'Space Mono', monospace;
-      font-size: 0.55rem;
-      letter-spacing: 0.15em;
-      padding: 0.2rem 0.6rem;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      margin-top: 0.8rem;
-      text-transform: uppercase;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      color: var(--accent2);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent2);
+      padding-bottom: 0.1rem;
+    }
+
+    .log-doc:hover {
+      color: var(--white);
+      border-color: var(--white);
     }
 
     /* About inner */
@@ -613,23 +616,25 @@
     <div class="inner">
       <div class="section-label">Research Logbook</div>
 
-      <!-- 
+      <!--
         HOW TO ADD A NEW ENTRY:
-        Copy the block below from <div class="log-entry"> to its closing </div>
-        Paste it above the previous entry (newest entries go on top)
-        Change the date, entry number, title, and content
+        Copy one full block from "BEGIN ENTRY" to "END ENTRY"
+        Paste it above the previous entry (newest on top)
+        Fill in date, title, your passage, and document link if you have one
+        If no document, delete the <a class="log-doc"> line
       -->
 
-      <!-- ENTRY TEMPLATE — copy from here -->
+      <!-- BEGIN ENTRY -->
       <div class="log-entry">
-        <div class="log-date">FEB 2026<br/>Entry 001</div>
-        <div class="log-content">
-          <h4>The Question That Started It</h4>
+        <div class="log-entry-date">23 February 2026</div>
+        <div class="log-entry-body">
+          <h3>The Question That Started It</h3>
           <p>Reading SK Das — encountered a small section on William Hale's spinning rocket. The question formed: under what conditions does spin minimise trajectory deviation due to small asymmetric torques, and where does this method break down? Decided this would be the research focus. Assumption: model rocket as uniform solid cylinder for initial calculations.</p>
-          <span class="log-tag">Foundations</span>
+          <!-- If you have a document, replace # with the file path. Otherwise delete this line -->
+          <!-- <a href="projects/spin-stabilisation/entry001.pdf" class="log-doc">View Document</a> -->
         </div>
       </div>
-      <!-- to here -->
+      <!-- END ENTRY -->
 
     </div>
   </section>
