@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Research Log — VelocityRaptor23</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --border: #1e1e1e;
+      --border-light: #2a2a2a;
+      --text: #e8e8e8;
+      --text-muted: #666;
+      --text-dim: #444;
+      --accent: #c8a96e;
+      --accent-dim: rgba(200, 169, 110, 0.12);
+      --accent-glow: rgba(200, 169, 110, 0.06);
+      --red: #c96e6e;
+      --green: #6ec98a;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(10, 10, 10, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-brand {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.05em;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--text);
+    }
+
+    /* ── HEADER ── */
+    .page-header {
+      padding: 8rem 3rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .page-header .label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .page-header p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.8;
+    }
+
+    /* ── LAYOUT ── */
+    .log-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 4rem 3rem 6rem;
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 0 4rem;
+      align-items: start;
+    }
+
+    /* ── SIDEBAR / TIMELINE ── */
+    .timeline-nav {
+      position: sticky;
+      top: 6rem;
+    }
+
+    .timeline-nav .toc-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+    }
+
+    .timeline-nav ul {
+      list-style: none;
+      border-left: 1px solid var(--border-light);
+      padding-left: 1rem;
+    }
+
+    .timeline-nav li {
+      margin-bottom: 0.6rem;
+    }
+
+    .timeline-nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-dim);
+      text-decoration: none;
+      transition: color 0.2s;
+      display: block;
+      line-height: 1.5;
+    }
+
+    .timeline-nav a:hover {
+      color: var(--accent);
+    }
+
+    .timeline-nav a .toc-date {
+      display: block;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      opacity: 0.6;
+    }
+
+    /* ── ENTRIES ── */
+    .entries {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .log-entry {
+      padding: 3rem 0;
+      border-bottom: 1px solid var(--border);
+      animation: fadeIn 0.4s ease both;
+    }
+
+    .log-entry:first-child {
+      padding-top: 0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .entry-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .entry-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+    }
+
+    .entry-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .tag-theory {
+      background: var(--accent-dim);
+      color: var(--accent);
+      border: 1px solid rgba(200, 169, 110, 0.2);
+    }
+
+    .tag-error {
+      background: rgba(201, 110, 110, 0.1);
+      color: var(--red);
+      border: 1px solid rgba(201, 110, 110, 0.2);
+    }
+
+    .tag-insight {
+      background: rgba(110, 201, 138, 0.08);
+      color: var(--green);
+      border: 1px solid rgba(110, 201, 138, 0.15);
+    }
+
+    .tag-question {
+      background: rgba(110, 138, 201, 0.08);
+      color: #8aa4e8;
+      border: 1px solid rgba(110, 138, 201, 0.15);
+    }
+
+    .log-entry h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.3;
+      margin-bottom: 1rem;
+      color: var(--text);
+    }
+
+    .log-entry h2 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .log-entry p {
+      font-size: 0.92rem;
+      color: #b0b0b0;
+      line-height: 1.85;
+      margin-bottom: 1rem;
+      max-width: 640px;
+    }
+
+    .log-entry p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* equations */
+    .equations {
+      background: var(--surface);
+      border: 1px solid var(--border-light);
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .equations p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      line-height: 1.6;
+    }
+
+    .equations p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* error block */
+    .error-block {
+      background: rgba(201, 110, 110, 0.05);
+      border: 1px solid rgba(201, 110, 110, 0.15);
+      border-left: 3px solid var(--red);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .error-block .error-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--red);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .error-block p {
+      font-size: 0.88rem;
+      color: #b08080;
+      margin-bottom: 0.5rem;
+    }
+
+    /* insight block */
+    .insight-block {
+      background: rgba(110, 201, 138, 0.04);
+      border: 1px solid rgba(110, 201, 138, 0.12);
+      border-left: 3px solid var(--green);
+      padding: 1.2rem 1.5rem;
+      margin: 1.5rem 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .insight-block .insight-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--green);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    .insight-block p {
+      font-size: 0.88rem;
+      color: #80b090;
+      margin-bottom: 0.5rem;
+    }
+
+    /* notebook embed */
+    .notebook-embed {
+      margin: 1.8rem 0;
+    }
+
+    .notebook-embed .embed-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .notebook-embed .embed-label::before {
+      content: '';
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border: 1px solid var(--text-dim);
+      border-radius: 1px;
+    }
+
+    .notebook-pages {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 0.8rem;
+    }
+
+    .notebook-page {
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+      overflow: hidden;
+      background: var(--surface);
+      transition: border-color 0.2s;
+      cursor: pointer;
+    }
+
+    .notebook-page:hover {
+      border-color: var(--accent);
+    }
+
+    .notebook-page img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      display: block;
+      filter: brightness(0.9);
+      transition: filter 0.2s;
+    }
+
+    .notebook-page:hover img {
+      filter: brightness(1);
+    }
+
+    .notebook-page .page-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-dim);
+      padding: 0.5rem 0.7rem;
+      letter-spacing: 0.06em;
+    }
+
+    /* PDF link */
+    .pdf-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-decoration: none;
+      border: 1px solid rgba(200, 169, 110, 0.25);
+      padding: 0.5rem 1rem;
+      border-radius: 3px;
+      margin-top: 1rem;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .pdf-link:hover {
+      background: var(--accent-dim);
+      border-color: rgba(200, 169, 110, 0.5);
+    }
+
+    .pdf-link::before {
+      content: '↓';
+      font-size: 0.8rem;
+    }
+
+    /* YouTube embed */
+    .video-embed {
+      margin: 1.8rem 0;
+    }
+
+    .video-embed .embed-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .video-embed iframe {
+      width: 100%;
+      max-width: 560px;
+      aspect-ratio: 16/9;
+      border: 1px solid var(--border-light);
+      border-radius: 4px;
+    }
+
+    /* lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      background: rgba(0,0,0,0.92);
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid var(--border-light);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      letter-spacing: 0.1em;
+    }
+
+    /* ── HOW TO ADD entries ── */
+    .add-guide {
+      margin-top: 4rem;
+      padding: 2rem;
+      border: 1px dashed var(--border-light);
+      border-radius: 4px;
+      background: rgba(255,255,255,0.01);
+    }
+
+    .add-guide .guide-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+
+    .add-guide pre {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      line-height: 1.8;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 3rem;
+      text-align: center;
+    }
+
+    footer p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.5rem; }
+      .page-header { padding: 6rem 1.5rem 2rem; }
+      .log-container {
+        grid-template-columns: 1fr;
+        padding: 2rem 1.5rem 4rem;
+        gap: 0;
+      }
+      .timeline-nav { display: none; }
+      footer { padding: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a class="nav-brand" href="index.html">VelocityRaptor23</a>
+    <ul class="nav-links">
+      <li><a href="index.html#projects">Projects</a></li>
+      <li><a href="blog.html" class="active">Log</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="https://github.com/VelocityRaptor23" target="_blank">GitHub</a></li>
+    </ul>
+  </nav>
+
+  <!-- HEADER -->
+  <header class="page-header">
+    <div class="label">Research Logbook</div>
+    <h1>The process, <em>honestly.</em></h1>
+    <p>Documenting the spin stabilisation project from first question to final result — including the wrong turns, the fallacies, and the slow moments of understanding.</p>
+  </header>
+
+  <!-- MAIN -->
+  <main class="log-container">
+
+    <!-- SIDEBAR TOC -->
+    <aside class="timeline-nav">
+      <div class="toc-label">Entries</div>
+      <ul>
+        <li>
+          <a href="#entry-19mar">
+            19 March 2026
+            <span class="toc-date">Precession frequency</span>
+          </a>
+        </li>
+        <li>
+          <a href="#entry-24feb">
+            24 Feb 2026
+            <span class="toc-date">Direction, not magnitude</span>
+          </a>
+        </li>
+        <li>
+          <a href="#entry-23feb">
+            23 Feb 2026
+            <span class="toc-date">The question that started it</span>
+          </a>
+        </li>
+        <li>
+          <a href="#entry-02feb">
+            2 Feb 2026
+            <span class="toc-date">First assumptions</span>
+          </a>
+        </li>
+        <!-- ADD NEW TOC ENTRIES ABOVE THIS LINE -->
+      </ul>
+    </aside>
+
+    <!-- ENTRIES -->
+    <section class="entries">
+
+      <!-- ═══════════════════════════════════════
+           ENTRY: 19 MARCH 2026
+           TO ADD MORE ENTRIES: copy the block
+           between ═══ markers and paste above
+           this one, then edit the content.
+      ═══════════════════════════════════════ -->
+      <article class="log-entry" id="entry-19mar">
+        <div class="entry-meta">
+          <span class="entry-date">19 March 2026</span>
+          <span class="entry-tag tag-theory">Theory</span>
+          <span class="entry-tag tag-insight">Derivation</span>
+        </div>
+        <h2>Precession Frequency — <em>Ω = τ/L</em></h2>
+
+        <p>Defined precession formally: the motion of the axis of a spinning body tracing a cone, caused by the action of an external torque. The key term to introduce here is the precession frequency Ω.</p>
+
+        <div class="equations">
+          <p>Ω = τ / L</p>
+          <p>where τ = applied torque, L = angular momentum</p>
+        </div>
+
+        <p>The ratio of torque to angular momentum. Higher spin → higher L → for the same torque, Ω is smaller. The precession is less significant. The rocket stays on trajectory.</p>
+
+        <p>Conversely, a slow-spinning rocket has less L. The same aerodynamic torque produces a much larger Ω — significant precession — which can lead to unstable tumbling.</p>
+
+        <div class="insight-block">
+          <div class="insight-label">Key insight</div>
+          <p>The Thanjavur Bommai analogy: push it sideways and it doesn't fall — it wobbles and returns. The spin is the base. Angular momentum resists the fall. The faster the spin, the tighter the wobble.</p>
+        </div>
+
+        <p>Also noted: Is and IR are not defined here again — carried forward from JEE knowledge. Stability requires Is &lt;&lt; IR. For long thin rockets this holds naturally. Short thin rockets have comparable Is and IR — and are unstable.</p>
+
+        <!-- Notebook pages for this entry -->
+        <div class="notebook-embed">
+          <div class="embed-label">Notebook — 19 March 2026</div>
+          <div class="notebook-pages">
+            <!-- 
+              TO ADD NOTEBOOK IMAGES:
+              1. Upload your image files to your GitHub repo (e.g. /assets/notes/)
+              2. Replace "assets/notes/page-19mar-1.jpg" with your actual file path
+              3. Update the page label
+            -->
+            <div class="notebook-page" onclick="openLightbox(this.querySelector('img'))">
+              <img src="assets/notes/page-19mar-1.jpg" alt="Precession definition and frequency derivation" onerror="this.parentElement.style.display='none'">
+              <div class="page-label">p.1 — Precession definition</div>
+            </div>
+            <div class="notebook-page" onclick="openLightbox(this.querySelector('img'))">
+              <img src="assets/notes/page-19mar-2.jpg" alt="Stability conditions Is vs IR" onerror="this.parentElement.style.display='none'">
+              <div class="page-label">p.2 — Stability conditions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PDF download for this entry -->
+        <!-- <a class="pdf-link" href="assets/pdfs/notes-19mar.pdf" target="_blank">Download notebook pages — 19 March</a> -->
+
+      </article>
+      <!-- ═══════════════════════════════════════ -->
+
+
+      <!-- ENTRY: 24 FEB 2026 -->
+      <article class="log-entry" id="entry-24feb">
+        <div class="entry-meta">
+          <span class="entry-date">24 February 2026</span>
+          <span class="entry-tag tag-theory">Theory</span>
+        </div>
+        <h2>Direction, <em>not magnitude.</em></h2>
+
+        <p>The question posed: if a torque τ acts perpendicular to a rotating body's angular momentum L, what changes — magnitude, direction, or both?</p>
+
+        <p>The answer is direction only. When τ ⊥ L, the vectors are perpendicular. The torque adds a small piece to L at right angles — so L rotates its direction without changing length. This is precession.</p>
+
+        <div class="equations">
+          <p>τ = dL/dt</p>
+          <p>if τ ⊥ L → |L| constant, direction changes</p>
+        </div>
+
+        <p>The intuition: think of L as an arrow. The torque is another arrow attached perpendicular to it. Moving the torque just rotates the direction of L — it traces a cone. This is non-intuitive but geometrically exact.</p>
+
+      </article>
+
+
+      <!-- ENTRY: 23 FEB 2026 — ERRORS PAGE -->
+      <article class="log-entry" id="entry-23feb">
+        <div class="entry-meta">
+          <span class="entry-date">23 February 2026</span>
+          <span class="entry-tag tag-error">Errors</span>
+          <span class="entry-tag tag-theory">Theory</span>
+        </div>
+        <h2>Errors in <em>my assumptions.</em></h2>
+
+        <p>First wrong assumption documented: I thought 'I' (moment of inertia) alone was the main factor for stability. My reasoning was that low I → more ω for the same L → faster spin → more stable. This came from S.K. Das.</p>
+
+        <div class="error-block">
+          <div class="error-label">Fallacy</div>
+          <p>I forgot angular momentum isn't conserved when external torques act.</p>
+          <p>I also ignored that there are actually two moments of inertia — Is (along spin axis) and IR (along rotation axis). Reducing Is alone is not the only factor.</p>
+        </div>
+
+        <p>The corrected picture: for long, thin rockets, Is is small and IR is large — this is the stable configuration. For short thin rockets, Is and IR are comparable — unstable.</p>
+
+        <div class="equations">
+          <p>Stability condition: Is &lt;&lt; IR</p>
+          <p>Long thin rocket → Is small, IR large → stable ✓</p>
+          <p>Short thin rocket → Is ≈ IR → unstable ✗</p>
+        </div>
+
+        <p>Reducing Is is necessary but not sufficient. The ratio Is/IR is what governs stability — which points toward precession as the next concept to understand.</p>
+
+      </article>
+
+
+      <!-- ENTRY: 2 FEB 2026 — ORIGIN -->
+      <article class="log-entry" id="entry-02feb">
+        <div class="entry-meta">
+          <span class="entry-date">2 February 2026</span>
+          <span class="entry-tag tag-question">Origin</span>
+        </div>
+        <h2>The question <em>that started it.</em></h2>
+
+        <p>Reading <em>All About Rockets</em> by S.K. Das — encountered a short passage on William Hale's introduction of spinning rockets. For the first time in a long time, I asked myself: why does spinning help?</p>
+
+        <p>Had a debate online — lost. Learned the basic principle: a spinning rocket is stable because of angular momentum. Decided to understand it properly, by working it out.</p>
+
+        <p>Model assumption: treat the rocket as a rigid, solid cylinder with mass M, length L, radius R.</p>
+
+        <div class="equations">
+          <p>I = MR²/2  (moment of inertia, solid cylinder)</p>
+          <p>L = Iω     (angular momentum)</p>
+        </div>
+
+        <p>This notebook documents the process honestly — the confusions, the dead ends, and the slow moments of understanding. Starting from the flaw.</p>
+
+      </article>
+
+      <!-- ═══════════════════════════════════════
+           HOW TO ADD A NEW ENTRY
+           Copy everything between the article tags
+           above and paste it at the TOP of the
+           entries section (before entry-19mar).
+           Then edit:
+           - id="entry-DDMON"
+           - entry-date text
+           - entry-tag classes (theory/error/insight/question)
+           - h2 heading
+           - paragraph content
+           - equations block (optional)
+           - error-block or insight-block (optional)
+           - notebook-pages img src paths
+           - pdf-link href (optional)
+           Also add a new <li> in the sidebar TOC.
+      ═══════════════════════════════════════ -->
+
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 VelocityRaptor23 · velocityraptor23.github.io</p>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
+    <div class="lightbox-close">close ✕</div>
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    function openLightbox(img) {
+      if (!img || !img.src) return;
+      document.getElementById('lightbox-img').src = img.src;
+      document.getElementById('lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+  </script>
+
+</body>
+</html>
